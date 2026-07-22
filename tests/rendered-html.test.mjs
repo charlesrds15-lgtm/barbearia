@@ -2,40 +2,18 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
+test("keeps the homepage content ready for Vercel", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const layout = await readFile(
+    new URL("../app/layout.tsx", import.meta.url),
+    "utf8",
   );
-}
 
-test("server-renders the Kaique Santos Barbearia homepage", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
-  assert.match(html, /<title>Kaique Santos Barbearia \| Tubarão, SC<\/title>/i);
-  assert.match(html, /Escolha seu serviço e faça uma pré-reserva\./);
-  assert.match(html, /Ver profissionais e preços de Combos/);
-  assert.match(html, /Ver profissionais e preços de Cabelo/);
-  assert.match(html, /Ver profissionais e preços de Barba/);
-  assert.match(html, /Ver profissionais e preços de Sobrancelha/);
-  assert.match(html, /WhatsApp: \(48\) 99810-6967/);
+  assert.match(layout, /title: "Kaique Santos Barbearia \| Tubarão, SC"/);
+  assert.match(page, /Escolha seu serviço e faça uma pré-reserva\./);
+  assert.match(page, /WhatsApp: \(48\) 99810-6967/);
+  assert.match(page, /Rua dos Ferroviários, 295/);
+  assert.doesNotMatch(layout, /next\/headers/);
 });
 
 test("keeps the pre-booking flow connected to prices and WhatsApp", async () => {

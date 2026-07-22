@@ -1,6 +1,6 @@
-# Barbearia Top
+# Kaique Santos Barbearia
 
-Site institucional responsivo para a **Barbearia Top**, inspirado no estilo vintage e moderno de barbearias tradicionais.
+Site institucional responsivo para a **Kaique Santos Barbearia**, pronto para deploy na Vercel.
 
 ## Site publicado
 
@@ -11,7 +11,7 @@ https://barbearia-top-demo.charlesrds15.chatgpt.site
 - cabeçalho e navegação responsiva;
 - banner principal com chamada para agendamento;
 - apresentação da barbearia;
-- serviços e preços de exemplo;
+- fluxo de pré-agendamento com profissional, serviço, valor e WhatsApp;
 - diferenciais, endereço e horários;
 - galeria de imagens;
 - links de WhatsApp e redes sociais;
@@ -33,19 +33,23 @@ npm install
 npm run dev
 ```
 
-No Windows PowerShell, caso o comando acima não reconheça a variável de ambiente, use:
-
-```powershell
-$env:WRANGLER_LOG_PATH='.wrangler/wrangler.log'
-npx vinext dev
-```
-
 Depois, abra o endereço local mostrado no terminal.
 
 ## Validar antes de publicar
 
 ```bash
+npm run lint
 npm run build
+npm test
 ```
 
-Os dados de telefone, endereço, preços e redes sociais são exemplos e podem ser substituídos diretamente em `app/page.tsx`.
+## Deploy na Vercel
+
+1. Importe este repositório na Vercel.
+2. Framework Preset: `Next.js`.
+3. Build Command: `npm run build`.
+4. Install Command: `npm install`.
+5. Output Directory: deixe em branco.
+6. Variável opcional: `NEXT_PUBLIC_SITE_URL` com a URL final do site, para ajustar a imagem de compartilhamento.
+
+Os dados de telefone, endereço, preços e redes sociais podem ser substituídos diretamente em `app/page.tsx` e `app/booking-flow.tsx`.
